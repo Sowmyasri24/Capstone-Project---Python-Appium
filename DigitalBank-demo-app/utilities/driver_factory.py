@@ -1,4 +1,4 @@
-"""Driver factory for creating Appium driver instances."""
+"""Driver factory for creating Appium driver instances (Local + Perfecto)."""
 
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
@@ -12,28 +12,24 @@ class DriverFactory:
     """
     Factory class for creating and managing Appium driver instances.
 
-    This class handles driver initialization and cleanup for both
-    Android and iOS platforms.
+    Supports:
+    - Local Android/iOS emulators or real devices
+    - Perfecto cloud devices
     """
 
     logger = Logger.get_logger(__name__)
 
     @staticmethod
     def create_driver():
-        """
-        Create Appium driver based on platform configuration.
+        """Create and return Appium driver based on platform and environment."""
 
-        Returns:
-            webdriver.Remote: Configured Appium driver instance
-
-        Raises:
-            Exception: If driver creation fails
-        """
         try:
             DriverFactory.logger.info(
-                f"Creating driver for platform: {Config.PLATFORM}"
+                f"Creating driver for platform: {Config.PLATFORM}, "
+                f"Environment: {Config.CLOUD_PROVIDER}"
             )
 
+            # Load capabilities based on platform
             if Config.is_android():
                 options = UiAutomator2Options().load_capabilities(
                     Capabilities.get_android_capabilities()
@@ -43,34 +39,27 @@ class DriverFactory:
                     Capabilities.get_ios_capabilities()
                 )
 
+            # Create Appium driver
             driver = webdriver.Remote(
-                Config.APPIUM_SERVER_URL,
+                Config.get_server_url(),
                 options=options
             )
 
             driver.implicitly_wait(Config.IMPLICIT_WAIT)
             DriverFactory.logger.info("Driver created successfully")
-
             return driver
 
         except Exception as e:
-            DriverFactory.logger.error(f"Failed to create driver: {str(e)}")
+            DriverFactory.logger.error(f"Failed to create driver: {e}")
             raise
 
     @staticmethod
     def quit_driver(driver):
-        """
-        Quit the Appium driver and cleanup resources.
-
-        Args:
-            driver (webdriver.Remote): Driver instance to quit
-        """
+        """Quit the Appium driver and clean up resources."""
         if driver:
             try:
                 DriverFactory.logger.info("Quitting driver")
                 driver.quit()
                 DriverFactory.logger.info("Driver quit successfully")
             except Exception as e:
-                DriverFactory.logger.error(
-                    f"Error while quitting driver: {str(e)}"
-                )
+                DriverFactory.logger.error(f"Error while quitting driver: {e}")

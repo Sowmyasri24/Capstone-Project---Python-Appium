@@ -1,66 +1,57 @@
-"""Device capabilities configuration for Android and iOS."""
+"""Device capabilities configuration for Android and iOS (Local + Perfecto setup)."""
 
 from config.config import Config
 
 
 class Capabilities:
-    """
-    Capabilities manager for Android and iOS devices.
-
-    This class provides device-specific capabilities required
-    for Appium driver initialization.
-    """
+    """Manages Android and iOS capabilities for both local and Perfecto environments."""
 
     @staticmethod
     def get_android_capabilities():
-        """
-        Get Android device capabilities.
-
-        Returns:
-            dict: Android capabilities dictionary
-        """
+        """Get Android device capabilities."""
         return {
             "platformName": "Android",
             "platformVersion": Config.ANDROID_PLATFORM_VERSION,
             "deviceName": Config.ANDROID_DEVICE_NAME,
+            "automationName": "UiAutomator2",
             "appPackage": Config.ANDROID_APP_PACKAGE,
             "appActivity": Config.ANDROID_APP_ACTIVITY,
-            "automationName": "UiAutomator2",
+            "newCommandTimeout": Config.COMMAND_TIMEOUT,
             "autoGrantPermissions": True,
             "noReset": False,
-            "fullReset": False,
-            "newCommandTimeout": Config.COMMAND_TIMEOUT,
+            # Include security token only if running on Perfecto
+            **(
+                {"securityToken": Config.PERFECTO_SECURITY_TOKEN}
+                if Config.CLOUD_PROVIDER.lower() == "perfecto"
+                else {}
+            ),
         }
 
     @staticmethod
     def get_ios_capabilities():
-        """
-        Get iOS device capabilities.
-
-        Returns:
-            dict: iOS capabilities dictionary
-        """
+        """Get iOS device capabilities."""
         return {
             "platformName": "iOS",
             "platformVersion": Config.IOS_PLATFORM_VERSION,
             "deviceName": Config.IOS_DEVICE_NAME,
-            "bundleId": Config.IOS_BUNDLE_ID,
             "automationName": "XCUITest",
+            "bundleId": Config.IOS_BUNDLE_ID,
             "autoAcceptAlerts": True,
             "noReset": False,
-            "fullReset": False,
             "newCommandTimeout": Config.COMMAND_TIMEOUT,
+            # Include security token only if running on Perfecto
+            **(
+                {"securityToken": Config.PERFECTO_SECURITY_TOKEN}
+                if Config.CLOUD_PROVIDER.lower() == "perfecto"
+                else {}
+            ),
         }
 
     @staticmethod
     def get_capabilities():
-        """
-        Get platform-specific capabilities based on configuration.
-
-        Returns:
-            dict: Capabilities dictionary for current platform
-        """
-        if Config.is_android():
-            return Capabilities.get_android_capabilities()
-        else:
-            return Capabilities.get_ios_capabilities()
+        """Return platform-specific capabilities."""
+        return (
+            Capabilities.get_android_capabilities()
+            if Config.is_android()
+            else Capabilities.get_ios_capabilities()
+        )
