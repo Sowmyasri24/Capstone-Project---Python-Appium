@@ -12,72 +12,85 @@ class LoginPage(BasePage):
     """
 
     # Android Locators
-    ANDROID_MENU_BUTTON = (
-        By.XPATH,
-        "//android.view.ViewGroup[@content-desc='open menu']/android.widget.ImageView"
-    )
-    ANDROID_LOGIN_MENU_ITEM = (
-        By.ACCESSIBILITY_ID,
-        "menu item log in"
-    )
+    # ANDROID_MENU_BUTTON = (
+    #     By.XPATH,
+    #     "//android.view.ViewGroup[@content-desc='open menu']/android.widget.ImageView"
+    # )
+    # ANDROID_LOGIN_MENU_ITEM = (
+    #     By.ACCESSIBILITY_ID,
+    #     "menu item log in"
+    # )
     ANDROID_USERNAME_FIELD = (
         By.ACCESSIBILITY_ID,
-        "Username input field"
+        "Enter Email Address"
     )
     ANDROID_PASSWORD_FIELD = (
         By.ACCESSIBILITY_ID,
-        "Password input field"
+        "Enter Password"
     )
     ANDROID_LOGIN_BUTTON = (
         By.ACCESSIBILITY_ID,
-        "Login button"
+        "Login Button"
     )
-    ANDROID_ERROR_MESSAGE = (
-        By.XPATH,
-        "//android.view.ViewGroup[@content-desc='generic-error-message']/android.widget.TextView"
-    )
-    ANDROID_LOGOUT_MENU_ITEM = (
+    ANDROID_SIGNUP_BUTTON = (
         By.ACCESSIBILITY_ID,
-        "menu item log out"
+        "Click here to Register new account"
     )
-    ANDROID_CONFIRM_LOGOUT_BUTTON = (
-        By.XPATH,
-        "//android.widget.Button[@resource-id='android:id/button1']"
+    ANDROID_SETTINGS_BUTTON = (
+        By.ACCESSIBILITY_ID,
+        "Settings Cog Icon"
     )
 
+    # ANDROID_ERROR_MESSAGE = (
+    #     By.XPATH,
+    #     "//android.view.ViewGroup[@content-desc='generic-error-message']/android.widget.TextView"
+    # )
+    # ANDROID_LOGOUT_MENU_ITEM = (
+    #     By.ACCESSIBILITY_ID,
+    #     "menu item log out"
+    # )
+    # ANDROID_CONFIRM_LOGOUT_BUTTON = (
+    #     By.XPATH,
+    #     "//android.widget.Button[@resource-id='android:id/button1']"
+    # )
+
     # iOS Locators
-    IOS_MENU_BUTTON = (
-        By.ACCESSIBILITY_ID,
-        "tab bar option menu"
-    )
-    IOS_LOGIN_MENU_ITEM = (
-        By.ACCESSIBILITY_ID,
-        "menu item log in"
-    )
+    # IOS_MENU_BUTTON = (
+    #     By.ACCESSIBILITY_ID,
+    #     "tab bar option menu"
+    # )
+    # IOS_LOGIN_MENU_ITEM = (
+    #     By.ACCESSIBILITY_ID,
+    #     "menu item log in"
+    # )
     IOS_USERNAME_FIELD = (
         By.ACCESSIBILITY_ID,
-        "Username input field"
+        "Enter UserName"
     )
     IOS_PASSWORD_FIELD = (
         By.ACCESSIBILITY_ID,
-        "Password input field"
+        "Enter Password"
     )
     IOS_LOGIN_BUTTON = (
         By.ACCESSIBILITY_ID,
-        "Login button"
+        "LogIn"
     )
-    IOS_ERROR_MESSAGE = (
+    IOS_SIGNUP_BUTTON = (
         By.ACCESSIBILITY_ID,
-        "generic-error-message"
+        "Sign Up Here"
     )
-    IOS_LOGOUT_MENU_ITEM = (
-        By.ACCESSIBILITY_ID,
-        "menu item log out"
-    )
-    IOS_CONFIRM_LOGOUT_BUTTON = (
-        By.ACCESSIBILITY_ID,
-        "Log Out"
-    )
+    # IOS_ERROR_MESSAGE = (
+    #     By.ACCESSIBILITY_ID,
+    #     "generic-error-message"
+    # )
+    # IOS_LOGOUT_MENU_ITEM = (
+    #     By.ACCESSIBILITY_ID,
+    #     "menu item log out"
+    # )
+    # IOS_CONFIRM_LOGOUT_BUTTON = (
+    #     By.ACCESSIBILITY_ID,
+    #     "Log Out"
+    # )
 
     def __init__(self, driver):
         """
@@ -88,39 +101,39 @@ class LoginPage(BasePage):
         """
         super().__init__(driver)
 
-    def open_menu(self):
-        """
-        Open the hamburger/tab menu.
-
-        Returns:
-            bool: True if menu opened successfully, False otherwise
-        """
-        locator = self.get_locator(
-            self.ANDROID_MENU_BUTTON,
-            self.IOS_MENU_BUTTON
-        )
-        success = self.actions.click(locator)
-        if success:
-            self.logger.info("Menu opened")
-        return success
-
-    def navigate_to_login(self):
-        """
-        Navigate to login screen from menu.
-
-        Returns:
-            bool: True if navigation successful, False otherwise
-        """
-        if self.open_menu():
-            locator = self.get_locator(
-                self.ANDROID_LOGIN_MENU_ITEM,
-                self.IOS_LOGIN_MENU_ITEM
-            )
-            success = self.actions.click(locator)
-            if success:
-                self.logger.info("Navigated to login screen")
-            return success
-        return False
+    # def open_menu(self):
+    #     """
+    #     Open the hamburger/tab menu.
+    #
+    #     Returns:
+    #         bool: True if menu opened successfully, False otherwise
+    #     """
+    #     locator = self.get_locator(
+    #         self.ANDROID_MENU_BUTTON,
+    #         self.IOS_MENU_BUTTON
+    #     )
+    #     success = self.actions.click(locator)
+    #     if success:
+    #         self.logger.info("Menu opened")
+    #     return success
+    #
+    # def navigate_to_login(self):
+    #     """
+    #     Navigate to login screen from menu.
+    #
+    #     Returns:
+    #         bool: True if navigation successful, False otherwise
+    #     """
+    #     if self.open_menu():
+    #         locator = self.get_locator(
+    #             self.ANDROID_LOGIN_MENU_ITEM,
+    #             self.IOS_LOGIN_MENU_ITEM
+    #         )
+    #         success = self.actions.click(locator)
+    #         if success:
+    #             self.logger.info("Navigated to login screen")
+    #         return success
+    #     return False
 
     def enter_username(self, username):
         """

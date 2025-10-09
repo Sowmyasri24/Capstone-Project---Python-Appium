@@ -3,7 +3,7 @@
 import pytest
 from config.config import Config
 from pages.login_page import LoginPage
-from pages.product_page import ProductPage
+from pages.welcome_page import WelcomePage
 from utilities.logger import Logger
 
 logger = Logger.get_logger(__name__)
@@ -31,7 +31,7 @@ class TestLogin:
         logger.info("Starting test: test_successful_login")
 
         login_page = LoginPage(driver)
-        product_page = ProductPage(driver)
+        welcome_page = WelcomePage(driver)
 
         # Perform login
         assert login_page.login(
@@ -39,8 +39,8 @@ class TestLogin:
             Config.TEST_PASSWORD
         ), "Login flow failed"
 
-        # Verify login success by checking product page
-        assert product_page.is_product_page_displayed(), \
+        # Verify login success by checking welcome page
+        assert welcome_page.is_welcome_title_displayed(), \
             "Product page not displayed after login"
 
         logger.info("Test passed: test_successful_login")
