@@ -3,8 +3,8 @@
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions
-from config.config import Config
 from config.capabilities import Capabilities
+from config.config import Config
 from utilities.logger import Logger
 
 

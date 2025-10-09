@@ -1,10 +1,9 @@
 """Base page class with common functionality."""
 
-from selenium.webdriver.common.by import By
 from config.config import Config
+from utilities.logger import Logger
 from utilities.mobile_actions import MobileActions
 from utilities.mobile_gestures import MobileGestures
-from utilities.logger import Logger
 
 
 class BasePage:

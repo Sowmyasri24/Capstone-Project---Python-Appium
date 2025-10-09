@@ -1,8 +1,7 @@
 """Login page object."""
 
-from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
-
+from appium.webdriver.common.appiumby import AppiumBy
 
 class LoginPage(BasePage):
     """
@@ -13,69 +12,69 @@ class LoginPage(BasePage):
 
     # Android Locators
     ANDROID_MENU_BUTTON = (
-        By.XPATH,
+        AppiumBy.XPATH,
         "//android.view.ViewGroup[@content-desc='open menu']/android.widget.ImageView"
     )
     ANDROID_LOGIN_MENU_ITEM = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "menu item log in"
     )
     ANDROID_USERNAME_FIELD = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "Username input field"
     )
     ANDROID_PASSWORD_FIELD = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "Password input field"
     )
     ANDROID_LOGIN_BUTTON = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "Login button"
     )
     ANDROID_ERROR_MESSAGE = (
-        By.XPATH,
+        AppiumBy.XPATH,
         "//android.view.ViewGroup[@content-desc='generic-error-message']/android.widget.TextView"
     )
     ANDROID_LOGOUT_MENU_ITEM = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "menu item log out"
     )
     ANDROID_CONFIRM_LOGOUT_BUTTON = (
-        By.XPATH,
+        AppiumBy.XPATH,
         "//android.widget.Button[@resource-id='android:id/button1']"
     )
 
     # iOS Locators
     IOS_MENU_BUTTON = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "tab bar option menu"
     )
     IOS_LOGIN_MENU_ITEM = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "menu item log in"
     )
     IOS_USERNAME_FIELD = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "Username input field"
     )
     IOS_PASSWORD_FIELD = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "Password input field"
     )
     IOS_LOGIN_BUTTON = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "Login button"
     )
     IOS_ERROR_MESSAGE = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "generic-error-message"
     )
     IOS_LOGOUT_MENU_ITEM = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "menu item log out"
     )
     IOS_CONFIRM_LOGOUT_BUTTON = (
-        By.ACCESSIBILITY_ID,
+        AppiumBy.ACCESSIBILITY_ID,
         "Log Out"
     )
 

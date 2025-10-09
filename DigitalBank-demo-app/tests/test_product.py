@@ -4,8 +4,9 @@ import pytest
 from config.config import Config
 from pages.login_page import LoginPage
 from pages.product_page import ProductPage
-from pages.cart_page import CartPage
 from utilities.logger import Logger
+
+from pages.cart_page import CartPage
 
 logger = Logger.get_logger(__name__)
 
