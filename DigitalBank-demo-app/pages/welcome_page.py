@@ -1,61 +1,50 @@
-"""Welcome page object."""
-
-from selenium.webdriver.common.by import By
-from pages.base_page import BasePage
 from appium.webdriver.common.appiumby import AppiumBy
+from utilities.logger import Logger
 
-
-class WelcomePage(BasePage):
-    """
-    Welcome page object for My Demo App.
-
-    Contains all locators and methods related to the welcome screen.
-    """
-
-    # Android Locators
-    ANDROID_WELCOME_TITLE = (
-        By.ACCESSIBILITY_ID,
-        "Welcome"  # Update this value if Android accessibility ID differs
-    )
-
-    # iOS Locators
-    IOS_WELCOME_TITLE = (
-        AppiumBy.IOS_CLASS_CHAIN,
-        '**/XCUIElementTypeStaticText[`name == "Welcome"`]'
-    )
-
+class WelcomePage:
     def __init__(self, driver):
-        """
-        Initialize WelcomePage.
+        self.driver = driver
+        self.log = Logger().get_logger()
 
-        Args:
-            driver (webdriver.Remote): Appium driver instance
-        """
-        super().__init__(driver)
+        # Common locators (Android & iOS separated)
+        self.locators = {
+            "android": {
+                "welcome_text": (AppiumBy.ID, "xyz.digitalbank.demo:id/welcomeText"),
+                "my_dashboard": (AppiumBy.ACCESSIBILITY_ID, "My Dashboard"),
+                "deposits": (AppiumBy.ACCESSIBILITY_ID, "Deposit's"),
+                "atms": (AppiumBy.ACCESSIBILITY_ID, "ATM's NearMe"),
+                "my_accounts": (AppiumBy.ACCESSIBILITY_ID, "My Accounts"),
+                "toolbar_image": (AppiumBy.ID, "xyz.digitalbank.demo:id/toolbar_image"),
+                "account_selection": (AppiumBy.ID, "xyz.digitalbank.demo:id/selectAccountText"),
+                "balance_label": (AppiumBy.ID, "xyz.digitalbank.demo:id/balanceLabel")
+            },
+            "ios": {
+                "welcome_label": (AppiumBy.IOS_CLASS_CHAIN, '**/XCUIElementTypeStaticText[`name == "Welcome"`]'),
+                "welcome_button": (AppiumBy.IOS_CLASS_CHAIN, '**/XCUIElementTypeButton[`name == "Welcome"`]'),
+                "chart_icon": (AppiumBy.ACCESSIBILITY_ID, "chart.pie.fill"),
+                "transfer_button": (AppiumBy.ACCESSIBILITY_ID, "Transfer"),
+                "atm_button": (AppiumBy.ACCESSIBILITY_ID, "ATM"),
+                "tray_icon": (AppiumBy.ACCESSIBILITY_ID, "tray.fill"),
+                "picker_wheel": (AppiumBy.CLASS_NAME, "XCUIElementTypePickerWheel")
+            }
+        }
 
-    def is_welcome_title_displayed(self):
-        """
-        Check if the Welcome title is displayed.
+    def click_element(self, platform, element_name):
+        try:
+            locator = self.locators[platform][element_name]
+            self.driver.find_element(*locator).click()
+            self.log.info(f"Clicked on {element_name}")
+        except Exception as e:
+            self.log.error(f"Unable to click {element_name}: {str(e)}")
+            raise
 
-        Returns:
-            bool: True if Welcome title is displayed, False otherwise
-        """
-        locator = self.get_locator(
-            self.ANDROID_WELCOME_TITLE,
-            self.IOS_WELCOME_TITLE
-        )
-        return self.actions.is_displayed(locator, timeout=5)
-
-    def get_welcome_text(self):
-        """
-        Get the text of the Welcome title.
-
-        Returns:
-            str: The welcome title text or empty string if not found
-        """
-        locator = self.get_locator(
-            self.ANDROID_WELCOME_TITLE,
-            self.IOS_WELCOME_TITLE
-        )
-        return self.actions.get_text(locator)
-
+    def is_element_displayed(self, platform, element_name):
+        try:
+            locator = self.locators[platform][element_name]
+            element = self.driver.find_element(*locator)
+            visible = element.is_displayed()
+            self.log.info(f"{element_name} visible: {visible}")
+            return visible
+        except Exception as e:
+            self.log.error(f"Element not found: {element_name}, Error: {str(e)}")
+            return False
