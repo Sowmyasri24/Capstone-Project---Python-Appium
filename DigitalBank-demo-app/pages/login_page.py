@@ -1,277 +1,84 @@
-"""Login page object."""
+"""Page Object for Login Page."""
 
-from selenium.webdriver.common.by import By
-from pages.base_page import BasePage
+from appium.webdriver.common.appiumby import AppiumBy
+from utilities.logger import Logger
+from config.config import Config
 
 
-class LoginPage(BasePage):
-    """
-    Login page object for My Demo App.
-
-    Contains all locators and methods related to login functionality.
-    """
-
-    # Android Locators
-    # ANDROID_MENU_BUTTON = (
-    #     By.XPATH,
-    #     "//android.view.ViewGroup[@content-desc='open menu']/android.widget.ImageView"
-    # )
-    # ANDROID_LOGIN_MENU_ITEM = (
-    #     By.ACCESSIBILITY_ID,
-    #     "menu item log in"
-    # )
-    ANDROID_USERNAME_FIELD = (
-        By.ACCESSIBILITY_ID,
-        "Enter Email Address"
-    )
-    ANDROID_PASSWORD_FIELD = (
-        By.ACCESSIBILITY_ID,
-        "Enter Password"
-    )
-    ANDROID_LOGIN_BUTTON = (
-        By.ACCESSIBILITY_ID,
-        "Login Button"
-    )
-    ANDROID_SIGNUP_BUTTON = (
-        By.ACCESSIBILITY_ID,
-        "Click here to Register new account"
-    )
-    ANDROID_SETTINGS_BUTTON = (
-        By.ACCESSIBILITY_ID,
-        "Settings Cog Icon"
-    )
-
-    # ANDROID_ERROR_MESSAGE = (
-    #     By.XPATH,
-    #     "//android.view.ViewGroup[@content-desc='generic-error-message']/android.widget.TextView"
-    # )
-    # ANDROID_LOGOUT_MENU_ITEM = (
-    #     By.ACCESSIBILITY_ID,
-    #     "menu item log out"
-    # )
-    # ANDROID_CONFIRM_LOGOUT_BUTTON = (
-    #     By.XPATH,
-    #     "//android.widget.Button[@resource-id='android:id/button1']"
-    # )
-
-    # iOS Locators
-    # IOS_MENU_BUTTON = (
-    #     By.ACCESSIBILITY_ID,
-    #     "tab bar option menu"
-    # )
-    # IOS_LOGIN_MENU_ITEM = (
-    #     By.ACCESSIBILITY_ID,
-    #     "menu item log in"
-    # )
-    IOS_USERNAME_FIELD = (
-        By.ACCESSIBILITY_ID,
-        "Enter UserName"
-    )
-    IOS_PASSWORD_FIELD = (
-        By.ACCESSIBILITY_ID,
-        "Enter Password"
-    )
-    IOS_LOGIN_BUTTON = (
-        By.ACCESSIBILITY_ID,
-        "LogIn"
-    )
-    IOS_SIGNUP_BUTTON = (
-        By.ACCESSIBILITY_ID,
-        "Sign Up Here"
-    )
-    # IOS_ERROR_MESSAGE = (
-    #     By.ACCESSIBILITY_ID,
-    #     "generic-error-message"
-    # )
-    # IOS_LOGOUT_MENU_ITEM = (
-    #     By.ACCESSIBILITY_ID,
-    #     "menu item log out"
-    # )
-    # IOS_CONFIRM_LOGOUT_BUTTON = (
-    #     By.ACCESSIBILITY_ID,
-    #     "Log Out"
-    # )
+class LoginPage:
+    """Page Object representing the Login screen for Android and iOS."""
 
     def __init__(self, driver):
-        """
-        Initialize LoginPage.
+        self.driver = driver
+        self.logger = Logger.get_logger(__name__)
 
-        Args:
-            driver (webdriver.Remote): Appium driver instance
-        """
-        super().__init__(driver)
+        if Config.is_android():
+            # Android locators
+            self.locators = {
+                "email": (AppiumBy.ACCESSIBILITY_ID, "Enter Email Address"),
+                "password": (AppiumBy.ACCESSIBILITY_ID, "Enter Password"),
+                "login_button": (AppiumBy.ACCESSIBILITY_ID, "Login Button"),
+                "register_link": (AppiumBy.ACCESSIBILITY_ID, "Click here to Register new account"),
+                "settings_icon": (AppiumBy.ACCESSIBILITY_ID, "Settings Cog Icon"),
+                "error_message": (AppiumBy.ID, "xyz.digitalbank.demo:id/errorTextView"),
+            }
+        else:
+            # iOS locators
+            self.locators = {
+                "username": (AppiumBy.ACCESSIBILITY_ID, "Enter UserName"),
+                "continue_button": (AppiumBy.ACCESSIBILITY_ID, "continue"),
+                "password": (AppiumBy.ACCESSIBILITY_ID, "Enter Password"),
+                "login_button": (AppiumBy.ACCESSIBILITY_ID, "LogIn"),
+                "settings_icon": (AppiumBy.IOS_CLASS_CHAIN, '**/XCUIElementTypeButton[`name == "      "`]'),
+                "register_link": (AppiumBy.ACCESSIBILITY_ID, "Sign Up Here"),
+                "error_message": (AppiumBy.ACCESSIBILITY_ID, "Error Message"),
+            }
 
-    # def open_menu(self):
-    #     """
-    #     Open the hamburger/tab menu.
-    #
-    #     Returns:
-    #         bool: True if menu opened successfully, False otherwise
-    #     """
-    #     locator = self.get_locator(
-    #         self.ANDROID_MENU_BUTTON,
-    #         self.IOS_MENU_BUTTON
-    #     )
-    #     success = self.actions.click(locator)
-    #     if success:
-    #         self.logger.info("Menu opened")
-    #     return success
-    #
-    # def navigate_to_login(self):
-    #     """
-    #     Navigate to login screen from menu.
-    #
-    #     Returns:
-    #         bool: True if navigation successful, False otherwise
-    #     """
-    #     if self.open_menu():
-    #         locator = self.get_locator(
-    #             self.ANDROID_LOGIN_MENU_ITEM,
-    #             self.IOS_LOGIN_MENU_ITEM
-    #         )
-    #         success = self.actions.click(locator)
-    #         if success:
-    #             self.logger.info("Navigated to login screen")
-    #         return success
-    #     return False
+    # ---------------- ACTION METHODS ---------------- #
 
-    def enter_username(self, username):
-        """
-        Enter username in username field.
+    def enter_username_or_email(self, value):
+        """Enter username (iOS) or email (Android)."""
+        locator = self.locators["username"] if not Config.is_android() else self.locators["email"]
+        field = self.driver.find_element(*locator)
+        field.clear()
+        field.send_keys(value)
+        self.logger.info(f"Entered username/email: {value}")
 
-        Args:
-            username (str): Username to enter
+    def enter_password(self, value):
+        """Enter password."""
+        field = self.driver.find_element(*self.locators["password"])
+        field.clear()
+        field.send_keys(value)
+        self.logger.info("Entered password")
 
-        Returns:
-            bool: True if successful, False otherwise
-        """
-        locator = self.get_locator(
-            self.ANDROID_USERNAME_FIELD,
-            self.IOS_USERNAME_FIELD
-        )
-        success = self.actions.send_keys(locator, username)
-        if success:
-            self.logger.info(f"Entered username: {username}")
-        return success
+    def click_login(self):
+        """Click login button."""
+        self.driver.find_element(*self.locators["login_button"]).click()
+        self.logger.info("Clicked login button")
 
-    def enter_password(self, password):
-        """
-        Enter password in password field.
+    def click_register_link(self):
+        """Click link to navigate to registration."""
+        self.driver.find_element(*self.locators["register_link"]).click()
+        self.logger.info("Clicked Register link")
 
-        Args:
-            password (str): Password to enter
+    def click_settings_icon(self):
+        """Click the settings icon."""
+        self.driver.find_element(*self.locators["settings_icon"]).click()
+        self.logger.info("Clicked Settings icon")
 
-        Returns:
-            bool: True if successful, False otherwise
-        """
-        locator = self.get_locator(
-            self.ANDROID_PASSWORD_FIELD,
-            self.IOS_PASSWORD_FIELD
-        )
-        success = self.actions.send_keys(locator, password)
-        if success:
-            self.logger.info("Entered password")
-        return success
+    # ---------------- VALIDATION METHODS ---------------- #
 
-    def click_login_button(self):
-        """
-        Click the login button.
-
-        Returns:
-            bool: True if successful, False otherwise
-        """
-        locator = self.get_locator(
-            self.ANDROID_LOGIN_BUTTON,
-            self.IOS_LOGIN_BUTTON
-        )
-        success = self.actions.click(locator)
-        if success:
-            self.logger.info("Clicked login button")
-        return success
-
-    def login(self, username, password):
-        """
-        Perform complete login flow.
-
-        Args:
-            username (str): Username to login with
-            password (str): Password to login with
-
-        Returns:
-            bool: True if login successful, False otherwise
-        """
-        self.logger.info(f"Attempting login with username: {username}")
-
-        if not self.navigate_to_login():
+    def is_field_present(self, field_name):
+        """Check if the given field is visible."""
+        try:
+            return self.driver.find_element(*self.locators[field_name]).is_displayed()
+        except Exception:
             return False
-
-        if not self.enter_username(username):
-            return False
-
-        if not self.enter_password(password):
-            return False
-
-        if not self.click_login_button():
-            return False
-
-        # Hide keyboard after login
-        self.actions.hide_keyboard()
-
-        self.logger.info("Login flow completed")
-        return True
 
     def get_error_message(self):
-        """
-        Get error message text if displayed.
-
-        Returns:
-            str: Error message text or empty string
-        """
-        locator = self.get_locator(
-            self.ANDROID_ERROR_MESSAGE,
-            self.IOS_ERROR_MESSAGE
-        )
-        return self.actions.get_text(locator)
-
-    def is_error_displayed(self):
-        """
-        Check if error message is displayed.
-
-        Returns:
-            bool: True if error is displayed, False otherwise
-        """
-        locator = self.get_locator(
-            self.ANDROID_ERROR_MESSAGE,
-            self.IOS_ERROR_MESSAGE
-        )
-        return self.actions.is_displayed(locator, timeout=5)
-
-    def logout(self):
-        """
-        Perform logout operation.
-
-        Returns:
-            bool: True if logout successful, False otherwise
-        """
-        self.logger.info("Attempting logout")
-
-        if not self.open_menu():
-            return False
-
-        logout_locator = self.get_locator(
-            self.ANDROID_LOGOUT_MENU_ITEM,
-            self.IOS_LOGOUT_MENU_ITEM
-        )
-
-        if not self.actions.click(logout_locator):
-            return False
-
-        confirm_locator = self.get_locator(
-            self.ANDROID_CONFIRM_LOGOUT_BUTTON,
-            self.IOS_CONFIRM_LOGOUT_BUTTON
-        )
-
-        success = self.actions.click(confirm_locator)
-        if success:
-            self.logger.info("Logout successful")
-        return success
+        """Fetch visible error message text (if available)."""
+        try:
+            el = self.driver.find_element(*self.locators["error_message"])
+            return el.text.strip()
+        except Exception:
+            return None
